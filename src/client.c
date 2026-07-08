@@ -43,4 +43,15 @@ int main(void){
     }
     freeaddrinfo(servinfo);
     printf("Connected to the server!\n");
+
+    char buffer[256];
+    char msg[256];
+    while(1){
+    
+        printf("Client:");
+        fgets(msg, sizeof(msg),stdin);
+        send(sockfd,msg,strlen(msg)+1,0);
+        recv(sockfd, buffer,sizeof(buffer),0);
+        printf("Server: %s", buffer);
+    }
 }

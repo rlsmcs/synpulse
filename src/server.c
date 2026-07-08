@@ -59,17 +59,37 @@ int main(void){
     struct sockaddr_storage their_addr;   // cuz we don know if its ipv4 or ipv6 jus let the kernel fill it 
     socklen_t addr_size; // we use a pointer to this cuz we may change the value
     int new_fd;
-    while(1)
-    {
-    addr_size = sizeof(their_addr);
-    new_fd = accept(sockfd, (struct sockaddr*)&their_addr, &addr_size); // typecast to ipv4 for now
-    if(new_fd == -1){
-    perror("accept");
-    continue;
-    }
-    printf("Client connected!\n");
+    char buffer[256];
+    char msg[256];
+    
+    
+
+    while(1){
+        addr_size=sizeof(their_addr);
+        new_fd = accept(sockfd, (struct sockaddr*)&their_addr, &addr_size); // typecast to ipv4 for now
+        if(new_fd == -1){
+        perror("accept");
+        continue;
+        }
+    
+        while(1){
+            int bytes = recv(new_fd, buffer, sizeof(buffer),0);
+            if(bytes==0){
+                printf("Client disconnected.\n");
+                break;
+            }
+            if(bytes == -1){
+                perror("recv");
+                break;
+            }
+            printf("Client: %s", buffer);
+
+            printf("Server: ");
+            fgets(msg,sizeof(msg),stdin);
+            send(new_fd,msg,strlen(msg)+1,0);
+    
+        }
     close(new_fd);
+    printf("Client disconnected.\n");
     }
-    
-    
 }
