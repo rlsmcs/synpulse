@@ -20,11 +20,11 @@ SynPulse is being built incrementally to understand networking fundamentals and 
 
 ### Phase 1: Connection Establishment
 
-- [ ] Create a TCP socket
-- [ ] Bind the server to a port
-- [ ] Listen for incoming connections
-- [ ] Connect the client to the server
-- [ ] Establish a successful TCP connection
+- [x] Create a TCP socket
+- [x] Bind the server to a port
+- [x] Listen for incoming connections
+- [x] Connect the client to the server
+- [x] Establish a successful TCP connection
 
 ### Phase 2: Basic Communication
 
