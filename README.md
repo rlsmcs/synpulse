@@ -28,14 +28,14 @@ SynPulse is being built incrementally to understand networking fundamentals and 
 
 ### Phase 2: Basic Communication
 
-- [ ] Send a single message from client to server
-- [ ] Receive and display the message on the server
-- [ ] Send a single message from server to client
-- [ ] Verify bidirectional communication
+- [x] Send a single message from client to server
+- [x] Receive and display the message on the server
+- [x] Send a single message from server to client
+- [x] Verify bidirectional communication
 
 ### Phase 3: Interactive Chat
 
-- [ ] Implement continuous message exchange
+- [x] Implement continuous message exchange
 - [ ] Gracefully terminate connections
 - [ ] Handle unexpected client disconnects
 - [ ] Add basic input validation
