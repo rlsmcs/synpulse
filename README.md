@@ -10,11 +10,13 @@ SynPulse is being built incrementally to understand networking fundamentals and 
 - Learn POSIX socket programming in C
 - Build client-server communication from first principles
 - Explore how higher-level networking applications are implemented internally
+- Maybe use ncurses or soemthing  bit but that was not the point of this project so prolly not gonna be doing that
 
 ## cool stuff ig?
 
 - As it is LAN, private IP's will be used obviously so we get to see NAT, ports, IP addresses and sockets working in real time instead of as abstract concepts only.
 - by phase 4/ phase 5 it is a highly simplified version of discord from first principles.
+- we use multithreading using POSIX threads(pthreads) but the same outcome can also be achieved using poll() or epoll() 
 
 ## Roadmap
 
@@ -42,9 +44,9 @@ SynPulse is being built incrementally to understand networking fundamentals and 
 
 ### Phase 4: Concurrent Communication
 
-- [ ] Allow simultaneous sending and receiving
-- [ ] Introduce multithreading support
-- [ ] Remove blocking input behavior
+- [x] Allow simultaneous sending and receiving
+- [x] Introduce multithreading support
+- [x] Remove blocking input behavior
 
 ### Phase 5: Multiple Clients
 
