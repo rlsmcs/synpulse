@@ -14,7 +14,36 @@
 #define PORT "3490"
 
 #define BACKLOG 10
+#include <pthread.h>
 
+void *sender(void *arg){
+    int new_fd = *(int *)arg;
+    char msg[256];
+    while(1){
+        printf("Server: ");
+        fgets(msg, sizeof(msg), stdin);
+        send(new_fd,msg,strlen(msg)+1,0);
+    }
+    return NULL;
+}
+
+void *receiver(void *arg){
+    int new_fd = *(int *)arg;
+    char buffer[256];
+    while(1){
+        int bytes = recv(new_fd, buffer, sizeof(buffer),0);
+        if(bytes==0){
+            printf("Client disconnected.\n");
+            break;
+        }
+        if(bytes ==-1){
+            perror("recv");
+            break;
+        }
+        printf("Client: %s", buffer);
+    }
+    return NULL;
+}
 
 int main(void){
     int sockfd;
@@ -59,11 +88,9 @@ int main(void){
     struct sockaddr_storage their_addr;   // cuz we don know if its ipv4 or ipv6 jus let the kernel fill it 
     socklen_t addr_size; // we use a pointer to this cuz we may change the value
     int new_fd;
-    char buffer[256];
-    char msg[256];
     
-    
-
+    pthread_t sender_thread;
+    pthread_t receiver_thread;
     while(1){
         addr_size=sizeof(their_addr);
         new_fd = accept(sockfd, (struct sockaddr*)&their_addr, &addr_size); // typecast to ipv4 for now
@@ -72,24 +99,13 @@ int main(void){
         continue;
         }
     
-        while(1){
-            int bytes = recv(new_fd, buffer, sizeof(buffer),0);
-            if(bytes==0){
-                printf("Client disconnected.\n");
-                break;
-            }
-            if(bytes == -1){
-                perror("recv");
-                break;
-            }
-            printf("Client: %s", buffer);
+        pthread_create(&sender_thread,NULL,sender,&new_fd);
+        pthread_create(&receiver_thread,NULL,receiver,&new_fd);
+        pthread_join(sender_thread,NULL);
+        pthread_join(receiver_thread,NULL);
 
-            printf("Server: ");
-            fgets(msg,sizeof(msg),stdin);
-            send(new_fd,msg,strlen(msg)+1,0);
-    
-        }
-    close(new_fd);
-    printf("Client disconnected.\n");
+
+        close(new_fd);
+        printf("Client disconnected.\n");
     }
 }

@@ -7,6 +7,36 @@
 #include <netdb.h>
 #include <errno.h>
 #include <unistd.h>
+#include <pthread.h>
+
+void *sender(void *arg){
+    int sockfd = *(int *)arg;
+    char msg[256];
+    while(1){
+        printf("Client:");
+        fgets(msg,sizeof(msg),stdin);
+        send(sockfd,msg,strlen(msg)+1,0);
+    }
+    return NULL;
+}
+
+void *receiver(void *arg){
+    int sockfd = *(int *)arg;
+    char buffer[256];
+    while(1){
+        int bytes = recv(sockfd,buffer,sizeof(buffer),0);
+        if(bytes==0){
+            printf("Server disconnected.\n");
+            break;
+        }
+        if(bytes==-1){
+            perror("recv");
+            break;
+        }
+        printf("Server: %s", buffer);
+    }
+    return NULL;
+}
 
 #define PORT "3490"
 int main(void){
@@ -44,14 +74,13 @@ int main(void){
     freeaddrinfo(servinfo);
     printf("Connected to the server!\n");
 
-    char buffer[256];
-    char msg[256];
-    while(1){
-    
-        printf("Client:");
-        fgets(msg, sizeof(msg),stdin);
-        send(sockfd,msg,strlen(msg)+1,0);
-        recv(sockfd, buffer,sizeof(buffer),0);
-        printf("Server: %s", buffer);
-    }
+    pthread_t sender_thread;
+    pthread_t receiver_thread;
+    pthread_create(&sender_thread,NULL,sender,&sockfd);
+    pthread_create(&receiver_thread,NULL,receiver,&sockfd);
+    pthread_join(sender_thread, NULL);
+    pthread_join(receiver_thread, NULL);
+
+    close(sockfd);
+    return 0;
 }
